@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.sciencesquad.health">
+
+    <!-- For the Steps Module to access the hardware. -->
+    <uses-feature android:name="android.hardware.sensor.stepcounter" />
+    <!-- For the Activity Module to read GPS data. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- For the Activity Module to read GPS data. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- For SoundService to play audio with the screen off. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- For Nutrition to scan barcodes. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Restricts app to phone-use only; no tablets -->
+    <compatible-screens>
+        <screen android:screenSize="small" android:screenDensity="ldpi" />
+        <screen android:screenSize="small" android:screenDensity="mdpi" />
+        <screen android:screenSize="small" android:screenDensity="hdpi" />
+        <screen android:screenSize="small" android:screenDensity="xhdpi" />
+        <screen android:screenSize="small" android:screenDensity="280" />
+        <screen android:screenSize="small" android:screenDensity="360" />
+        <screen android:screenSize="small" android:screenDensity="420" />
+        <screen android:screenSize="small" android:screenDensity="480" />
+        <screen android:screenSize="small" android:screenDensity="560" />
+        <screen android:screenSize="small" android:screenDensity="640" />
+        <screen android:screenSize="normal" android:screenDensity="ldpi" />
+        <screen android:screenSize="normal" android:screenDensity="mdpi" />
+        <screen android:screenSize="normal" android:screenDensity="hdpi" />
+        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
+        <screen android:screenSize="normal" android:screenDensity="280" />
+        <screen android:screenSize="normal" android:screenDensity="360" />
+        <screen android:screenSize="normal" android:screenDensity="420" />
+        <screen android:screenSize="normal" android:screenDensity="480" />
+        <screen android:screenSize="normal" android:screenDensity="560" />
+        <screen android:screenSize="normal" android:screenDensity="640" />
+    </compatible-screens>
+
+    <application
+            android:name=".core.BaseApp"
+            android:allowBackup="true"
+            android:installLocation="internalOnly"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme.Grey"
+            android:backupAgent=".core.RealmContext$RealmBackupAgent"
+            android:fullBackupOnly="true"
+            android:fullBackupContent="true">
+
+        <!-- Entry Activity point for the app. -->
+        <activity
+                android:name=".core.HostActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.Grey"
+                android:screenOrientation="portrait">
+
+            <!-- Can be started from any launcher application. -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- The initial Fragment to launch from the HostActivity. -->
+            <meta-data
+                android:name="fragment"
+                android:value="com.sciencesquad.health.overview.OverviewFragment" />
+        </activity>
+		
+		
+		<activity
+		        android:name=".nutrition.BarcodeCaptureActivity"
+		        android:label="@string/barcode_header" />
+				
+        <!-- Entry Service point for the app. -->
+        <service
+                android:name=".core.HostService"
+                android:enabled="true"
+                android:exported="false">
+
+            <!-- The Modules to configure from the HostService. -->
+            <meta-data
+                    android:name="modules"
+                    android:value=".nutrition.NutritionModule|.prescriptions.PrescriptionModule|.sleep.SleepModule|.steps.StepsModule|.workout.WorkoutModule" />
+        </service>
+
+        <!-- Entry Event point for the app. -->
+        <receiver android:name=".core.EventBus$BroadcastReceiverBridge"
+                  android:enabled="true">
+
+            <!-- Support boot completion events. -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- For Google's API. -->
+        <meta-data
+                android:name="com.google.android.backup.api_key"
+                android:value="AEdPqrEAAAAIH0mZXy_cfYTsA7ZYW8iO-x0b-h2_k3SLBDx7Dg" />
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="@string/google_maps_key" />
+        <meta-data
+                android:name="com.google.android.gms.vision.DEPENDENCIES"
+                android:value="barcode"/>
+	</application>
+</manifest>

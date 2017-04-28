@@ -1,0 +1,53 @@
+language: android
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+android:
+  components:
+
+# Defaults  
+    - tools
+    - platform-tools
+    - build-tools-23.0.2
+    - android-23
+    
+# Extras
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - addon-google_apis-google-23
+
+  licenses:
+    - '.+'
+
+# Setup JAVA env for components
+before_install:
+  - export JAVA7_HOME=/usr/lib/jvm/java-7-oracle
+  - export JAVA8_HOME=/usr/lib/jvm/java-8-oracle
+  - export JAVA_HOME=$JAVA7_HOME
+
+# Default Gradle Test
+script:
+  - ./gradlew clean assemble || ./gradlew clean assemble
+#   - ./gradlew build connectedCheck
+
+# Fix Cache
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+# Notifications
+notifications:
+  email:
+    recipients:
+      - avaidyam@purdue.edu
+      - mill1298@purdue.edu
+      - bschabel@purdue.edu
+      - waldena@purdue.edu
+      - ford31@purdue.edu
+      - johns789@purdue.edu
+    on_success: [change]
+    on_failure: [always]
